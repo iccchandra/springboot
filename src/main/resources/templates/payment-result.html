@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Payment Result</title>
+    <style>
+        body { font-family: system-ui, sans-serif; background:#f1f5f9; margin:0;
+               padding:2rem; color:#0f172a; }
+        .card { max-width:560px; margin:0 auto; background:#fff; border-radius:16px;
+                padding:2rem 2.25rem; box-shadow:0 10px 30px rgba(0,0,0,.08); }
+        .status { display:flex; align-items:center; gap:.75rem; margin-bottom:1rem; }
+        .icon { width:46px; height:46px; border-radius:50%; display:flex; align-items:center;
+                justify-content:center; font-size:1.4rem; color:#fff; }
+        .ok { background:#16a34a; } .bad { background:#dc2626; }
+        h1 { margin:0; font-size:1.35rem; }
+        table { width:100%; border-collapse:collapse; margin-top:1rem; font-size:.92rem; }
+        td { padding:.55rem .25rem; border-bottom:1px solid #eef2f7; }
+        td.k { color:#64748b; width:45%; }
+        td.v { font-weight:600; text-align:right; }
+        .err { background:#fef2f2; color:#b91c1c; padding:.85rem 1rem; border-radius:10px;
+               font-size:.9rem; }
+        a.btn { display:inline-block; margin-top:1.5rem; text-decoration:none; background:#1d4ed8;
+                color:#fff; padding:.7rem 1.2rem; border-radius:10px; font-weight:600; }
+    </style>
+</head>
+<body>
+<div class="card">
+
+    <div th:if="${error != null}">
+        <div class="status">
+            <div class="icon bad">!</div>
+            <h1>Payment Error</h1>
+        </div>
+        <p class="err" th:text="${error}">error</p>
+    </div>
+
+    <div th:if="${error == null}">
+        <div class="status">
+            <div th:classappend="${success} ? 'ok' : 'bad'" class="icon"
+                 th:text="${success} ? '✓' : '✕'">✓</div>
+            <h1 th:text="${success} ? 'Fees Paid Successfully' : 'Payment Not Completed'">Result</h1>
+        </div>
+
+        <table>
+            <tr><td class="k">Status</td><td class="v" th:text="${orderStatus}">-</td></tr>
+            <tr><td class="k">Order ID</td><td class="v" th:text="${orderId}">-</td></tr>
+            <tr th:if="${billingName}"><td class="k">Student</td><td class="v" th:text="${billingName}">-</td></tr>
+            <tr th:if="${rollNumber}"><td class="k">Roll Number</td><td class="v" th:text="${rollNumber}">-</td></tr>
+            <tr th:if="${course}"><td class="k">Course</td><td class="v" th:text="${course}">-</td></tr>
+            <tr th:if="${feeType}"><td class="k">Fee Type</td><td class="v" th:text="${feeType}">-</td></tr>
+            <tr th:if="${amount}"><td class="k">Amount</td><td class="v">₹<span th:text="${amount}">0</span></td></tr>
+            <tr th:if="${paymentMode}"><td class="k">Payment Mode</td><td class="v" th:text="${paymentMode}">-</td></tr>
+            <tr th:if="${trackingId}"><td class="k">Tracking ID</td><td class="v" th:text="${trackingId}">-</td></tr>
+            <tr th:if="${bankRefNo}"><td class="k">Bank Ref No</td><td class="v" th:text="${bankRefNo}">-</td></tr>
+            <tr th:if="${statusMessage}"><td class="k">Message</td><td class="v" th:text="${statusMessage}">-</td></tr>
+            <tr th:if="${failureMessage != null and !failureMessage.isEmpty()}">
+                <td class="k">Failure Reason</td><td class="v" th:text="${failureMessage}">-</td></tr>
+        </table>
+    </div>
+
+    <a class="btn" th:href="@{/}">&larr; Make another payment</a>
+</div>
+</body>
+</html>

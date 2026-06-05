@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Student Fee Payments</title>
+    <style>
+        body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+               background:#f1f5f9; margin:0; padding:2rem; color:#0f172a; }
+        .wrap { max-width: 1100px; margin: 0 auto; }
+        .head { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
+        h1 { font-size:1.4rem; margin:0; }
+        .count { color:#64748b; font-size:.9rem; }
+        a.btn { text-decoration:none; background:#1d4ed8; color:#fff; padding:.55rem 1rem;
+                border-radius:9px; font-weight:600; font-size:.9rem; }
+        .card { background:#fff; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,.07);
+                overflow:hidden; }
+        table { width:100%; border-collapse:collapse; font-size:.86rem; }
+        th, td { padding:.7rem .85rem; text-align:left; border-bottom:1px solid #eef2f7; white-space:nowrap; }
+        th { background:#f8fafc; color:#475569; font-weight:600; position:sticky; top:0; }
+        tr:hover td { background:#fafcff; }
+        .amt { text-align:right; font-weight:600; }
+        .pill { display:inline-block; padding:.18rem .55rem; border-radius:999px; font-size:.72rem;
+                font-weight:700; }
+        .SUCCESS { background:#dcfce7; color:#166534; }
+        .PENDING { background:#fef9c3; color:#854d0e; }
+        .FAILED  { background:#fee2e2; color:#991b1b; }
+        .ABORTED { background:#e2e8f0; color:#475569; }
+        .empty { padding:2.5rem; text-align:center; color:#64748b; }
+        .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:.8rem; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="head">
+        <div>
+            <h1>Student Fee Payments</h1>
+            <span class="count"><span th:text="${total}">0</span> record(s)</span>
+        </div>
+        <a class="btn" th:href="@{/}">+ New Payment</a>
+    </div>
+
+    <div class="card">
+        <table th:if="${total > 0}">
+            <thead>
+            <tr>
+                <th>Created</th>
+                <th>Order ID</th>
+                <th>Student</th>
+                <th>Roll No</th>
+                <th>Course</th>
+                <th>Fee Type</th>
+                <th class="amt">Amount</th>
+                <th>Status</th>
+                <th>Mode</th>
+                <th>Tracking ID</th>
+                <th>Bank Ref</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${payments}">
+                <td class="mono" th:text="${#temporals.format(p.createdAt, 'dd-MMM HH:mm')}">--</td>
+                <td class="mono" th:text="${p.orderId}">--</td>
+                <td th:text="${p.studentName}">--</td>
+                <td th:text="${p.rollNumber}">--</td>
+                <td th:text="${p.course}">--</td>
+                <td th:text="${p.feeType}">--</td>
+                <td class="amt">₹<span th:text="${#numbers.formatDecimal(p.amount, 1, 2)}">0</span></td>
+                <td><span class="pill" th:classappend="${p.status}" th:text="${p.status}">-</span></td>
+                <td th:text="${p.paymentMode != null ? p.paymentMode : '—'}">—</td>
+                <td class="mono" th:text="${p.trackingId != null ? p.trackingId : '—'}">—</td>
+                <td class="mono" th:text="${p.bankRefNo != null ? p.bankRefNo : '—'}">—</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="empty" th:if="${total == 0}">No payments yet.</div>
+    </div>
+</div>
+</body>
+</html>
