@@ -1,6 +1,6 @@
 package com.example.studentfees.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**

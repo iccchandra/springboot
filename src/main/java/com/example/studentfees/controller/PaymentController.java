@@ -2,7 +2,7 @@ package com.example.studentfees.controller;
 
 import com.example.studentfees.model.StudentFeeForm;
 import com.example.studentfees.service.CcavenueService;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -69,7 +69,7 @@ public class PaymentController {
     @PostMapping("/payment/response")
     public String paymentResponse(@RequestParam(value = "encResp", required = false) String encResp,
                                   Model model) {
-        if (encResp == null || encResp.isBlank()) {
+        if (encResp == null || encResp.trim().isEmpty()) {
             log.error("No encResp received from CCAvenue");
             model.addAttribute("error", "No encrypted response received from the payment gateway.");
             return "payment-result";
@@ -113,7 +113,7 @@ public class PaymentController {
     /** Payments list (all student fee payments, newest first). */
     @GetMapping("/payments")
     public String payments(Model model) {
-        var all = paymentRecords.findAll();
+        java.util.List<com.example.studentfees.entity.StudentFeePayment> all = paymentRecords.findAll();
         model.addAttribute("payments", all);
         model.addAttribute("total", all.size());
         return "payments";

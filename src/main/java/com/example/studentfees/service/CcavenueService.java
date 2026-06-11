@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -29,7 +29,7 @@ public class CcavenueService {
 
     public CcavenueService(CcavenueProperties props) {
         this.props = props;
-        if (props.getWorkingKey() == null || props.getWorkingKey().isBlank()) {
+        if (props.getWorkingKey() == null || props.getWorkingKey().trim().isEmpty()) {
             throw new IllegalStateException("ccavenue.working-key is not configured");
         }
         this.crypto = new AesCryptUtil(props.getWorkingKey());
@@ -112,7 +112,12 @@ public class CcavenueService {
     }
 
     private static String decode(String s) {
-        return URLDecoder.decode(s, StandardCharsets.UTF_8);
+        try {
+            return URLDecoder.decode(s, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            // UTF-8 is always available on a standard JVM
+            throw new IllegalStateException("UTF-8 decoding not supported", e);
+        }
     }
 
     private static String safe(String s) {
@@ -120,5 +125,19 @@ public class CcavenueService {
     }
 
     /** Encrypted request payload to hand to the auto-submit redirect form. */
-    public record PaymentRequest(String encRequest, String accessCode, String transactionUrl) {}
+    public static final class PaymentRequest {
+        private final String encRequest;
+        private final String accessCode;
+        private final String transactionUrl;
+
+        public PaymentRequest(String encRequest, String accessCode, String transactionUrl) {
+            this.encRequest = encRequest;
+            this.accessCode = accessCode;
+            this.transactionUrl = transactionUrl;
+        }
+
+        public String encRequest() { return encRequest; }
+        public String accessCode() { return accessCode; }
+        public String transactionUrl() { return transactionUrl; }
+    }
 }

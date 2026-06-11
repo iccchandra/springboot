@@ -1,6 +1,6 @@
 package com.example.studentfees.model;
 
-import jakarta.validation.constraints.*;
+import javax.validation.constraints.*;
 
 /**
  * Backing form for the "Pay Student Fees" page.

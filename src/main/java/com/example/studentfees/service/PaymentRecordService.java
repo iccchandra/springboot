@@ -76,9 +76,16 @@ public class PaymentRecordService {
 
         String orderStatus = response.getOrDefault("order_status", "").toLowerCase();
         switch (orderStatus) {
-            case "success", "successful" -> p.setStatus(PaymentStatus.SUCCESS);
-            case "aborted" -> p.setStatus(PaymentStatus.ABORTED);
-            default -> p.setStatus(PaymentStatus.FAILED);
+            case "success":
+            case "successful":
+                p.setStatus(PaymentStatus.SUCCESS);
+                break;
+            case "aborted":
+                p.setStatus(PaymentStatus.ABORTED);
+                break;
+            default:
+                p.setStatus(PaymentStatus.FAILED);
+                break;
         }
 
         repository.save(p);
